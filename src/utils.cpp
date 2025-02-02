@@ -38,7 +38,7 @@ float calc_alpha(float a, float b, float c) {
 float two_decimals(float value) { return (round(value * 100) / 100); }
 uint8_t calc_checksum(String data) {
     uint8_t checksum = 0;
-    for (char c : json) {
+    for (char c : data) {
         checksum ^= c;
     }
     return checksum;
