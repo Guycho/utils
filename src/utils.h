@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 
 namespace Calcs {
 float map_float(float x, float in_min, float in_max, float out_min, float out_max);
@@ -13,6 +14,7 @@ float calc_hypotenuse_angle(float a, float b);
 float calc_shock_travel(float alpha, float a, float b);
 float calc_alpha(float a, float b, float c);
 float two_decimals(float value);
-uint8_t calc_checksum(String data);
+uint8_t calc_checksum(const String &data);
+bool verify_checksum(const String &data);
 }  // namespace Calcs
 #endif  // UTILS_H
