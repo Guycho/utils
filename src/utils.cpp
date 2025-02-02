@@ -36,11 +36,30 @@ float calc_alpha(float a, float b, float c) {
     return alpha;
 }
 float two_decimals(float value) { return (round(value * 100) / 100); }
-uint8_t calc_checksum(String data) {
+
+uint8_t calc_checksum(const String &data) {
     uint8_t checksum = 0;
     for (char c : data) {
         checksum ^= c;
     }
     return checksum;
 }
+
+bool verify_checksum(const String &data) {
+    JsonDocument m_json_data;
+    deserializeJson(m_json_data, data);
+    // Extract the checksum from the JSON document
+    uint8_t received_checksum = m_json_data["c"];
+    // Remove the checksum from the JSON document
+    m_json_data.remove("c");
+    String json;
+    serializeJson(m_json_data, json);
+
+    uint8_t calculated_checksum = Calcs::calc_checksum(json);
+    if (received_checksum != calculated_checksum) {
+        return false;  // Checksum mismatch;
+    }
+    return true;
+}
+
 }  // namespace Calcs
