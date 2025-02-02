@@ -13,6 +13,6 @@ float calc_hypotenuse_angle(float a, float b);
 float calc_shock_travel(float alpha, float a, float b);
 float calc_alpha(float a, float b, float c);
 float two_decimals(float value);
-
+uint8_t calc_checksum(String data);
 }  // namespace Calcs
 #endif  // UTILS_H
