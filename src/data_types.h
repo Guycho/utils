@@ -1,10 +1,9 @@
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 
-#include <Arduino.h>
+#include <cstdint>
 
-namespace DataTypes
-{
+namespace DataTypes {
 struct TelemetryData {
     bool arm_state;
     uint8_t steering_mode;
@@ -18,6 +17,7 @@ struct TelemetryData {
     float motors_throttle[4];
     float steering_values[4];
 };
+
 struct RemoteControllerData {
     float throttle = 0;
     float steering = 0;
