@@ -24,5 +24,6 @@ float two_decimals(float value);
 uint8_t calc_checksum(const std::string &data);
 bool verify_checksum(const std::string &data);
 std::string find_device_by_description(const std::string &description);
+std::string find_device_by_id(const std::string &vendor_id, const std::string &product_id);
 }  // namespace Calcs
 #endif  // UTILS_H
