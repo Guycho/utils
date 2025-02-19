@@ -68,4 +68,42 @@ bool verify_checksum(const std::string &data) {
     return true;
 }
 
+std::string find_device_by_description(const std::string &description) {
+    struct udev *udev = udev_new();
+    if (!udev) {
+        throw std::runtime_error("Failed to create udev object");
+    }
+
+    struct udev_enumerate *enumerate = udev_enumerate_new(udev);
+    udev_enumerate_add_match_subsystem(enumerate, "tty");
+    udev_enumerate_scan_devices(enumerate);
+
+    struct udev_list_entry *devices = udev_enumerate_get_list_entry(enumerate);
+    struct udev_list_entry *entry;
+
+    udev_list_entry_foreach(entry, devices) {
+        const char *path = udev_list_entry_get_name(entry);
+        struct udev_device *dev = udev_device_new_from_syspath(udev, path);
+
+        struct udev_device *parent = udev_device_get_parent(dev);
+        if (parent) {
+            const char *dev_desc = udev_device_get_sysattr_value(parent, "product");
+            if (dev_desc && description == dev_desc) {
+                const char *dev_node = udev_device_get_devnode(dev);
+                if (dev_node) {
+                    std::string device_name(dev_node);
+                    udev_device_unref(dev);
+                    udev_enumerate_unref(enumerate);
+                    udev_unref(udev);
+                    return device_name;
+                }
+            }
+        }
+        udev_device_unref(dev);
+    }
+
+    udev_enumerate_unref(enumerate);
+    udev_unref(udev);
+    throw std::runtime_error("Device with the specified description not found");
+}
 }  // namespace Calcs
