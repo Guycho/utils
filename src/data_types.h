@@ -37,7 +37,8 @@ struct RemoteControllerData {
     bool bottom_switch = 0;
     bool new_data = 0;
 };
-
+enum RCsticks { THROTTLE = 0, STEERING = 1 };
+enum RCbuttons { LEFT_ARROW = 0, RIGHT_ARROW = 1, UP_ARROW = 2, DOWN_ARROW = 3, SEL = 4, CH = 5, PLUS = 6, MINUS = 7, LEFT_TRIM_L = 8, LEFT_TRIM_R = 9, RIGHT_TRIM_L = 10, RIGHT_TRIM_R = 11, EDGE_SWITCH = 12, BOTTOM_SWITCH = 13};
 }  // namespace DataTypes
 
 #endif  // DATA_TYPES_H
