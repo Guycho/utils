@@ -45,6 +45,32 @@ float calc_alpha(float a, float b, float c) {
 
 float two_decimals(float value) { return (std::round(value * 100) / 100); }
 
+#ifdef ARDUINO
+uint8_t calc_checksum(const String &data) {
+    uint8_t checksum = 0;
+    for (int i = 0; i < data.length(); i++) {
+        checksum ^= data[i];
+    }
+    return checksum;
+}
+
+bool verify_checksum(const String &data) {
+    JsonDocument m_json_data;
+    deserializeJson(m_json_data, data);
+    // Extract the checksum from the JSON document
+    uint8_t received_checksum = m_json_data["c"];
+    // Remove the checksum from the JSON document
+    m_json_data.remove("c");
+    String json;
+    serializeJson(m_json_data, json);
+
+    uint8_t calculated_checksum = Calcs::calc_checksum(json);
+    if (received_checksum != calculated_checksum) {
+        return false;  // Checksum mismatch;
+    }
+    return true;
+}
+#else
 uint8_t calc_checksum(const std::string &data) {
     uint8_t checksum = 0;
     for (char c : data) {
@@ -67,7 +93,9 @@ bool verify_checksum(const std::string &data) {
     }
     return true;
 }
+#endif
 
+#ifndef ARDUINO
 std::string find_device_by_description(const std::string &description) {
     struct udev *udev = udev_new();
     if (!udev) {
@@ -191,5 +219,6 @@ std::string find_device_by_id(const std::string &vendor_id, const std::string &p
     udev_unref(udev);
     throw std::runtime_error("Device with the specified vendor ID and product ID not found");
 }
+#endif
 
 }  // namespace Calcs
